@@ -2,6 +2,8 @@ package windows_bulder_java;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,7 +12,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class CalculatriceGUI extends JFrame {
+public class CalculatriceGUI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -32,6 +34,10 @@ public class CalculatriceGUI extends JFrame {
 	private JButton btnPoint;
 	private JButton btnEgal;
 	private JButton btnPlus;
+
+	private double nb1 = 0;
+	private String op = "";
+	private boolean nouveau = true;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -65,70 +71,122 @@ public class CalculatriceGUI extends JFrame {
 
 		btnC = new JButton("C");
 		btnC.setBounds(10, 70, 290, 40);
+		btnC.addActionListener(this);
 		contentPane.add(btnC);
 
 		btn7 = new JButton("7");
 		btn7.setBounds(10, 120, 65, 60);
+		btn7.addActionListener(this);
 		contentPane.add(btn7);
 
 		btn8 = new JButton("8");
 		btn8.setBounds(85, 120, 65, 60);
+		btn8.addActionListener(this);
 		contentPane.add(btn8);
 
 		btn9 = new JButton("9");
 		btn9.setBounds(160, 120, 65, 60);
+		btn9.addActionListener(this);
 		contentPane.add(btn9);
 
 		btnDiv = new JButton("/");
 		btnDiv.setBounds(235, 120, 65, 60);
+		btnDiv.addActionListener(this);
 		contentPane.add(btnDiv);
 
 		btn4 = new JButton("4");
 		btn4.setBounds(10, 190, 65, 60);
+		btn4.addActionListener(this);
 		contentPane.add(btn4);
 
 		btn5 = new JButton("5");
 		btn5.setBounds(85, 190, 65, 60);
+		btn5.addActionListener(this);
 		contentPane.add(btn5);
 
 		btn6 = new JButton("6");
 		btn6.setBounds(160, 190, 65, 60);
+		btn6.addActionListener(this);
 		contentPane.add(btn6);
 
 		btnMul = new JButton("*");
 		btnMul.setBounds(235, 190, 65, 60);
+		btnMul.addActionListener(this);
 		contentPane.add(btnMul);
 
 		btn1 = new JButton("1");
 		btn1.setBounds(10, 260, 65, 60);
+		btn1.addActionListener(this);
 		contentPane.add(btn1);
 
 		btn2 = new JButton("2");
 		btn2.setBounds(85, 260, 65, 60);
+		btn2.addActionListener(this);
 		contentPane.add(btn2);
 
 		btn3 = new JButton("3");
 		btn3.setBounds(160, 260, 65, 60);
+		btn3.addActionListener(this);
 		contentPane.add(btn3);
 
 		btnMoins = new JButton("-");
 		btnMoins.setBounds(235, 260, 65, 60);
+		btnMoins.addActionListener(this);
 		contentPane.add(btnMoins);
 
 		btn0 = new JButton("0");
 		btn0.setBounds(10, 330, 65, 60);
+		btn0.addActionListener(this);
 		contentPane.add(btn0);
 
 		btnPoint = new JButton(".");
 		btnPoint.setBounds(85, 330, 65, 60);
+		btnPoint.addActionListener(this);
 		contentPane.add(btnPoint);
 
 		btnEgal = new JButton("=");
 		btnEgal.setBounds(160, 330, 65, 60);
+		btnEgal.addActionListener(this);
 		contentPane.add(btnEgal);
 
 		btnPlus = new JButton("+");
 		btnPlus.setBounds(235, 330, 65, 60);
+		btnPlus.addActionListener(this);
 		contentPane.add(btnPlus);
+	}
+
+	// quand on clique sur une touche
+	public void actionPerformed(ActionEvent e) {
+		String t = e.getActionCommand();
+
+		if (t.equals("C")) {
+			ecran.setText("0");
+			nb1 = 0;
+			op = "";
+			nouveau = true;
+		} else if (t.equals("+") || t.equals("-") || t.equals("*") || t.equals("/")) {
+			nb1 = Double.parseDouble(ecran.getText());
+			op = t;
+			nouveau = true;
+		} else if (t.equals("=")) {
+			if (!op.equals("")) {
+				double nb2 = Double.parseDouble(ecran.getText());
+				if (op.equals("/") && nb2 == 0) {
+					ecran.setText("Erreur");
+				} else {
+					ecran.setText("" + Calculatrice.calculer(nb1, nb2, op));
+				}
+				op = "";
+				nouveau = true;
+			}
+		} else {
+			// un chiffre ou le point
+			if (nouveau) {
+				ecran.setText(t);
+				nouveau = false;
+			} else {
+				ecran.setText(ecran.getText() + t);
+			}
+		}
 	}
 }
